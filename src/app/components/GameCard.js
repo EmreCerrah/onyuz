@@ -7,7 +7,7 @@ const GameCard = ({ game }) => {
       <Image src={game.image} alt={game.name} />
       <Box p="6">
         <Text fontWeight="bold" as="h4" lineHeight="tight" isTruncated color="white">
-          {console.log(game.name)}
+          {game.name}
         </Text>
         <Text color="gray.300">{game.price}</Text>
       </Box>

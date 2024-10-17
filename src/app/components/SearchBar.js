@@ -1,61 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { Flex, Input, HStack, Stack, Box, Text, Button } from '@chakra-ui/react';
-import { games } from '../data/games'; // Oyunları bir başka dosyadan alalım (opsiyonel)
+import * as React from 'react';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import Autocomplete from '@mui/material/Autocomplete';
 
-// SearchBar bileşeni
-const SearchBar = ({ search, setSearch, filteredGames, setFilteredGames }) => {
-  const [showAll, setShowAll] = useState(false); // Oyunların tümünü göster
-
-  useEffect(() => {
-    if (search === '') {
-      setFilteredGames(games); // Boşsa tüm oyunları göster
-    } else {
-      setFilteredGames(games.filter(game => game.name.toLowerCase().includes(search.toLowerCase())));
-    }
-  }, [search, setFilteredGames]);
-
-  const handleFocus = () => {
-    setShowAll(true); // Focus olduğunda tüm oyunları göster
-  };
-
-  const handleBlur = () => {
-    setTimeout(() => {
-      setShowAll(false); // Focus kaybolduğunda listeyi gizle (timeout ile hemen kapanmasını önleyelim)
-    }, 200);
-  };
-
+export default function Searchbar() {
   return (
-    <Flex direction="column" alignItems="center" mt="10">
-      <HStack spacing={0}>
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          placeholder="Search for a game..."
-          size="lg"
-          width="50%"
-          mb="5"
-          bg="gray.600"
-          color="white"
-        />
-        <Button colorScheme="teal" size="lg" mb="5">
-          Search
-        </Button>
-      </HStack>
-
-      {/* Arama yapıldığında önerilen oyunlar listesi */}
-      {showAll && (
-        <Stack spacing={3} width="50%" mt="4" bg="gray.700" p="4" borderRadius="md" boxShadow="md">
-          {filteredGames.map((game) => (
-            <Box key={game.id} p="2" bg="gray.800" borderRadius="md">
-              <Text color="white">{game.name}</Text>
-            </Box>
-          ))}
-        </Stack>
-      )}
-    </Flex>
+      <Autocomplete
+        sx={{ width: 300 }}
+        freeSolo
+        id="game-search"
+        disableClearable
+        options={Games.map((option) => option.title)}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Search input"
+            slotProps={{
+              input: {
+                ...params.InputProps,
+                type: 'search',
+              },
+            }}
+          />
+        )}
+      />
   );
-};
-
-export default SearchBar;
+}
+const Games = [
+  { id: 1, name: 'The Elder Scrolls V: Skyrim', price: '$9.59', image: 'https://upload.wikimedia.org/wikipedia/tr/7/79/The_Elder_Scrolls_V_Skyrim_kapak.png' },
+  { id: 2, name: 'Cyberpunk 2077', price: '$59.99', image: 'https://upload.wikimedia.org/wikipedia/tr/2/2b/Cyberpunk_2077_kutu_foto.jpg' },
+  { id: 3, name: 'The Witcher 3: Wild Hunt', price: '$29.99', image: 'https://upload.wikimedia.org/wikipedia/tr/5/53/TheWitcher3-WildHunt.KapakResmi.png' }
+];
